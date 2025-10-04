@@ -60,8 +60,10 @@ std::ostream& operator<<(std::ostream &os, const event &e) {
 // Overload of < operator for struct event
 // Will determine sorting order of events
 // e1 < e2 iff e1.ts < e2.ts
-bool operator<(const event &e1, const event &e2) {
-    return false;
+bool operator<(event &e1, event &e2) {
+    time_t time1 = mktime(&e1.ts);
+    time_t time2 = mktime(&e2.ts);
+    return time1<time2;
 }
 
 int main() {
@@ -85,8 +87,28 @@ int main() {
     e.domain_o = "john.reto.com";
     e.domain_d = "google.com";
 
+    event e1{};
+
+    e1.ts.tm_year = 2024 - 1900; // years since 1900
+    e1.ts.tm_mon = 8; // months since january
+    e1.ts.tm_mday = 5; // day of the month
+    e1.ts.tm_hour = 13; // hours since midnight
+    e1.ts.tm_min = 15; // minutes after the hour
+    e1.ts.tm_sec = 10; // seconds after the minute
+
+    // Sets rest of attributes
+    e1.ip_o = {10,48,124,211}; // Sets ip_o as new ip
+    e1.ip_d = {0,1,1,1}; // Will print as '-'
+    e1.port_o = "-";
+    e1.port_d = "100";
+    e1.domain_o = "john.reto.com";
+    e1.domain_d = "google.com";
+
     cout << e << "\n";
     
+    if (e1<e){
+        cout<<"Si funciono"<<std::endl;
+    }
     // *** TODO ***
     vector<event> v{};
 
